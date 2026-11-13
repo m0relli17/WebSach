@@ -1,0 +1,10 @@
+﻿@model IEnumerable<WebBanSach.Models.Data.DonDatHang>
+@{ ViewBag.Title="Đơn hàng của tôi"; Layout="~/Views/Shared/_Layout.cshtml"; }
+@functions { public string Status(int? n) { switch(n){case 1:return "Chờ xử lý";case 2:return "Đã đóng gói";case 3:return "Đang giao";case 4:return "Đã giao";case 5:return "Đã hủy";default:return "Đơn cũ / chưa cập nhật";} } }
+<h2>Đơn hàng của tôi</h2><p>Theo dõi đơn hàng và xem chi tiết từng sản phẩm.</p>
+<div class="btn-group" style="margin-bottom:20px"><a class="btn btn-default" href="@Url.Action("TrackingOder")">Tất cả</a>
+@for(int n=1;n<=5;n++){<a class="btn btn-default" href="@Url.Action("TrackingOder",new {status=n})">@Status(n)</a>}</div>
+@if(!Model.Any()){<div class="alert alert-info">Chưa có đơn hàng trong mục này.</div>}
+else {<table class="table table-striped"><thead><tr><th>Mã đơn</th><th>Ngày đặt</th><th>Dự kiến nhận</th><th>Trạng thái</th><th></th></tr></thead><tbody>
+@foreach(var o in Model){<tr><td>#@o.MaDDH</td><td>@o.NgayDat.ToString("dd/MM/yyyy HH:mm")</td><td>@o.NgayGiao.ToString("dd/MM/yyyy")</td><td>@Status(o.Tracking)</td><td><a href="@Url.Action("TrackingOderDetails",new {id=o.MaDDH})">Xem chi tiết</a></td></tr>}
+</tbody></table>}

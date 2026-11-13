@@ -1,0 +1,5 @@
+EMAIL OTP UPDATE
+PASS: 35 C# syntax trees; XML config/project; all project files present.
+PASS: default SMTP mode; empty credentials; SMS/Twilio removed from active verification.
+PASS: source checks: OTP hash, account/email binding, ownership guards, local-only pickup.
+NOT RUN: Windows MSBuild/Razor, SQL Server migration, browser tests, real Gmail delivery.

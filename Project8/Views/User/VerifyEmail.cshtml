@@ -1,0 +1,11 @@
+﻿@{ ViewBag.Title="Xác minh email"; Layout="~/Views/Shared/_Layout.cshtml"; }
+<div class="panel panel-default" style="max-width:520px;margin:40px auto;padding:24px">
+<h2>Xác minh email</h2><p>Email nhận mã: @ViewBag.Email</p>
+@if(TempData["Message"]!=null){<div class="alert alert-info">@TempData["Message"]</div>}
+@using(Html.BeginForm("SendOtp","User",FormMethod.Post)) { @Html.AntiForgeryToken()<button class="btn btn-default" type="submit">Gửi / gửi lại mã</button> }
+<p>Kiểm tra cả thư mục Thư rác / Spam. Chỉ mã mới nhất còn hiệu lực.</p><hr/>
+@using(Html.BeginForm("ConfirmOtp","User",FormMethod.Post)) {
+@Html.AntiForgeryToken()<label for="code">Mã xác minh 6 chữ số</label>
+<input class="form-control" id="code" name="code" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" maxlength="6" required />
+<button type="submit" class="btn btn-primary" style="margin-top:16px">Xác minh và tiếp tục</button>
+}<p style="margin-top:15px">Mã có hạn 5 phút, tối đa 5 lần thử. Đợi 60 giây để gửi lại.</p></div>

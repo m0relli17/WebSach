@@ -1,0 +1,19 @@
+﻿@model IEnumerable<WebBanSach.Models.Data.DonDatHang>
+@{ViewBag.Title="Quản lý đơn hàng";Layout="~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+var names=new[]{"Chưa cập nhật","Chờ xử lý","Đã đóng gói","Đang giao","Đã giao","Đã hủy"};}
+<h2>Quản lý đơn hàng</h2>
+@if(TempData["OrderMessage"]!=null){<div class="alert alert-info">@TempData["OrderMessage"]</div>}
+<table class="table"><thead><tr><th>Mã đơn</th><th>Khách hàng</th><th>Ngày đặt</th><th>Trạng thái</th><th>Cập nhật</th><th></th></tr></thead><tbody>
+@foreach(var o in Model.OrderByDescending(x=>x.MaDDH)){
+var state=o.Tracking.GetValueOrDefault(1);
+<tr><td>#@o.MaDDH</td><td>@o.KhachHang.TenKH</td><td>@o.NgayDat.ToString("dd/MM/yyyy HH:mm")</td><td>@(state>=0 && state<names.Length ? names[state]:"Chưa cập nhật")</td><td>
+@if(state>=1 && state<=3){using(Html.BeginForm("UpdateOrderStatus","Home",new{area="Admin"},FormMethod.Post,null)){
+@Html.AntiForgeryToken()<input type="hidden" name="id" value="@o.MaDDH"/>
+<select name="status" class="form-control">
+@if(state==1){<option value="2">Đã đóng gói</option><option value="5">Hủy đơn</option>}
+@if(state==2){<option value="3">Đang giao</option><option value="5">Hủy đơn</option>}
+@if(state==3){<option value="4">Đã giao / đã thu COD</option>}
+</select><button class="btn btn-primary" type="submit">Lưu</button>
+}}
+</td><td>@Html.ActionLink("Chi tiết","DetailsOrder",new{id=o.MaDDH})</td></tr>
+}</tbody></table>

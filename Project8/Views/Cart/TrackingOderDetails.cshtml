@@ -1,0 +1,15 @@
+﻿@model WebBanSach.Models.Data.DonDatHang
+@{ ViewBag.Title="Chi tiết đơn hàng"; Layout="~/Views/Shared/_Layout.cshtml";
+var labels=new[]{"Chưa cập nhật","Chờ xử lý","Đã đóng gói","Đang giao","Đã giao","Đã hủy"};
+var state=Model.Tracking.GetValueOrDefault(); }
+<h2>Đơn hàng #@Model.MaDDH</h2>
+@if(TempData["OrderMessage"]!=null){<div class="alert alert-info">@TempData["OrderMessage"]</div>}
+<p>Trạng thái: <strong>@(state>=0 && state<labels.Length ? labels[state] : "Chưa cập nhật")</strong></p>
+<p>Ngày đặt: @Model.NgayDat.ToString("dd/MM/yyyy HH:mm") — Dự kiến nhận: @Model.NgayGiao.ToString("dd/MM/yyyy")</p>
+<p>Thanh toán: @(Model.ThanhToan==1 ? "Đã thanh toán" : "Chưa thanh toán — COD")</p>
+<table class="table"><thead><tr><th>Sách</th><th>Số lượng</th><th>Đơn giá</th><th>Thành tiền</th></tr></thead><tbody>
+@foreach(var item in Model.ChiTietDDHs){<tr><td>@item.Sach.TenSach</td><td>@item.SoLuong</td><td>@item.DonGia.GetValueOrDefault().ToString("N0") đ</td><td>@((item.DonGia.GetValueOrDefault()*item.SoLuong.GetValueOrDefault()).ToString("N0")) đ</td></tr>}
+</tbody></table>
+<h3>Tổng cộng: @Model.ChiTietDDHs.Sum(x=>x.DonGia.GetValueOrDefault()*x.SoLuong.GetValueOrDefault()).ToString("N0") đ</h3>
+@if(Model.Tracking==1){using(Html.BeginForm("CancelOrder","Cart",FormMethod.Post)){@Html.AntiForgeryToken()<input type="hidden" name="id" value="@Model.MaDDH"/><button type="submit" class="btn btn-danger" onclick="return confirm('Bạn muốn hủy đơn này?')">Hủy đơn</button>}}
+<p><a href="@Url.Action("TrackingOder")">Trở về danh sách đơn</a></p>
